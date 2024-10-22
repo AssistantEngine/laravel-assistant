@@ -7,9 +7,10 @@ return [
     "llm-provider-key" => "",
 
     "chat" => [
-        "render_assistant_message_as_markdown" => true,
+        "render-assistant-message-as-markdown" => true,
 
-        "disable_user_input" => false,
+        "disable-assistant-icon" => false,
+        "disable-user-input" => false,
 
         "open-ai-recorder" => [
             "activate" => true,

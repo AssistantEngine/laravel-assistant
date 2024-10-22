@@ -1,16 +1,18 @@
 @php
     /** @var \AssistantEngine\SDK\Models\Conversation\ConversationItem[] $history */
     /** @var string $lastRunStatus */
+
+    $disableAssistantIcon = config("assistant-engine.chat.disable-assistant-icon", false);
 @endphp
 
-<div class="flex flex-col p-4 pb-0 h-full relative">
+<div class="flex flex-col pb-0 h-full relative">
     <ul id="assistant-engine::chat-container" class="flex-1 overflow-y-auto pb-8 scrollbar-hide"
-        @if($maxHeight !== 0) wire:poll.visible.1s="loadMessages" style="max-height: {{$maxHeight}} px" @endif
+        @if($maxHeight !== 0) wire:poll.visible.1s="loadMessages" style="max-height: {{$maxHeight}}px" @endif
     >
         @foreach($history as $index => $conversationItem)
             @if($conversationItem['role'] === \AssistantEngine\SDK\Models\Conversation\ConversationItem::ROLE_ASSISTANT)
                 <li class="max-w-lg flex gap-x-2 sm:gap-x-4 mb-4">
-                    <div class="inline-block rounded-full">
+                    <div class="inline-block rounded-full {{$disableAssistantIcon ? 'hidden' : ''}}">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5 mt-2 text-gray-500 dark:text-gray-400">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
                         </svg>
@@ -33,7 +35,7 @@
 
                         @foreach($conversationItem['messages'] as $assistantMessage)
                             <div class="mt-2 bg-white border border-gray-200 rounded-2xl p-4 text-sm space-y-3 dark:bg-neutral-900 dark:border-neutral-700">
-                                @if(config("assistant-engine.chat.render_assistant_message_as_markdown"))
+                                @if(config("assistant-engine.chat.render-assistant-message-as-markdown"))
                                     {!! \Illuminate\Support\Str::markdown($assistantMessage['content']) !!}
                                 @else
                                     {{$assistantMessage['content']}}
@@ -73,7 +75,7 @@
                 @endif
             @elseif($conversationItem['role'] === \AssistantEngine\SDK\Models\Conversation\ConversationItem::ROLE_ERROR)
                 <li class="flex ms-auto gap-x-2 sm:gap-x-4 mb-4">
-                    <div class="inline-block rounded-full">
+                    <div class="inline-block rounded-full {{$disableAssistantIcon ? 'hidden' : ''}}">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5 mt-2 text-gray-500 dark:text-gray-400">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
                         </svg>
@@ -108,7 +110,7 @@
             @endif
             @if ($pendingAssistantItem)
                 <li class="max-w-lg flex gap-x-2 sm:gap-x-4 mb-4">
-                    <div class="inline-block rounded-full">
+                    <div class="inline-block rounded-full {{$disableAssistantIcon ? 'hidden' : ''}}">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5 mt-2 text-gray-500 dark:text-gray-400">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
                         </svg>
@@ -131,10 +133,10 @@
 
                         @foreach($pendingAssistantItem['messages'] as $pendingAssistantMessage)
                             <div class="text-sm  bg-white border border-gray-200 rounded-2xl p-4 mb-2 space-y-3 dark:bg-neutral-900 dark:border-neutral-700">
-                                @if(config("assistant-engine.chat.render_assistant_message_as_markdown"))
-                                    {!! \Illuminate\Support\Str::markdown($assistantMessage['content']) !!}
+                                @if(config("assistant-engine.chat.render-assistant-message-as-markdown"))
+                                    {!! \Illuminate\Support\Str::markdown($pendingAssistantMessage['content']) !!}
                                 @else
-                                    {{$assistantMessage['content']}}
+                                    {{$pendingAssistantMessage['content']}}
                                 @endif
                             </div>
                         @endforeach
@@ -164,9 +166,9 @@
         </div>
     @endif
 
-    @if(config("assistant-engine.chat.disable_user_input") !== true)
+    @if(config("assistant-engine.chat.disable-user-input") !== true)
         <div class="pt-4 border-t flex flex-row">
-            <form wire:submit.prevent="sendMessage" class="w-full">
+            <div class="w-full">
                 <div class="flex rounded-lg shadow-sm border border-gray-300">
                     <button type="button" wire:click="resetThread" class="w-[2.875rem] h-[2.875rem] shrink-0 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-s-md border  border-white bg-white text-gray-600 hover:bg-gray-100 focus:outline-none disabled:opacity-50 disabled:pointer-events-none">
                         <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -174,7 +176,9 @@
                         </svg>
                     </button>
 
-                    <input type="text" wire:model.live="messageInput" placeholder="Type your message here..." class="py-3 px-4 block w-full border-gray-200 border-r-white shadow-sm rounded-0 text-sm focus:z-10 focus:border-gray-200 focus:border-r-0 focus:outline-none focus:ring-0 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
+                    <form wire:submit.prevent="sendMessage" class="w-full">
+                        <input type="text" wire:model.live="messageInput" placeholder="Type your message here..." class="py-3 px-4 block w-full border-gray-200 border-r-white shadow-sm rounded-0 text-sm focus:z-10 focus:border-gray-200 focus:border-r-0 focus:outline-none focus:ring-0 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600">
+                    </form>
 
                     @if (!$lastRunInFiniteState)
                         <!-- Cancel Button -->
@@ -203,7 +207,7 @@
                         </button>
                     @endif
                 </div>
-            </form>
+            </div>
         </div>
     @endif
 
