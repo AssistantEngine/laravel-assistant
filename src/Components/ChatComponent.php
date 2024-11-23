@@ -18,6 +18,12 @@ class ChatComponent extends Component
     const EVENT_CHANGE_CONVERSATION = 'assistant-engine:chat:changeConversation';
     const EVENT_PROCESS_MESSAGE = 'assistant-engine:chat:processMessage';
 
+
+    public $userName = null; // Default user name
+    public $assistantName = null; // Default system name
+
+    public $contentWidth = 80;
+
     protected AssistantEngine $assistantEngine;
 
     public $threadId;
@@ -31,6 +37,7 @@ class ChatComponent extends Component
     public $lastRunStatus = '';
     public $lastRunInFiniteState = false;
     public $messageCount = 0;
+    public $theme = 'default'; // Default theme
 
     public function boot()
     {
@@ -41,8 +48,12 @@ class ChatComponent extends Component
      * @param int|string $record
      * @return void
      */
-    public function mount(?int $conversationId = null, $option = null): void
+    public function mount(?int $conversationId = null, $option = null, $theme = 'default', $userName = 'User', $assistantName = 'Assistant'): void
     {
+        $this->theme = $theme;
+        $this->userName = $userName;
+        $this->assistantName = $assistantName;
+
         if ($option) {
             $thread = $this->assistantEngine->findOrCreateConversation($option);
         } else if ($conversationId) {
@@ -187,6 +198,10 @@ class ChatComponent extends Component
 
     public function render()
     {
-        return view('assistant-engine::chat-component');
+        $view = $this->theme === 'simple'
+            ? 'assistant-engine::chat-component-simple'
+            : 'assistant-engine::chat-component';
+
+        return view($view);
     }
 }
