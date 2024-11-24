@@ -5,6 +5,7 @@ namespace AssistantEngine\Laravel\Components;
 use AssistantEngine\SDK\AssistantEngine;
 use AssistantEngine\SDK\Models\Conversation\Conversation;
 use AssistantEngine\SDK\Models\Conversation\ConversationItem;
+use AssistantEngine\SDK\Models\Options\ApprovalOption;
 use AssistantEngine\SDK\Models\Options\ConversationOption;
 use AssistantEngine\SDK\Models\Options\MessageOption;
 use Livewire\Attributes\On;
@@ -17,6 +18,7 @@ class ChatComponent extends Component
     const EVENT_SHOULD_SCROLL = 'assistant-engine:chat:shouldScroll';
     const EVENT_CHANGE_CONVERSATION = 'assistant-engine:chat:changeConversation';
     const EVENT_PROCESS_MESSAGE = 'assistant-engine:chat:processMessage';
+    const EVENT_PROCESS_APPROVAL = 'assistant-engine:chat:processApproval';
 
 
     public $userName = null; // Default user name
@@ -194,6 +196,16 @@ class ChatComponent extends Component
 
         $this->loadMessages(true);
         $this->dispatch(self::EVENT_SHOULD_SCROLL);
+    }
+
+    #[On(self::EVENT_PROCESS_APPROVAL)]
+    public function processApproval($type, $message, $data)
+    {
+        $toolCallId = str_replace("TC_", "", $data['id']);
+
+        $approvalOption = new ApprovalOption($toolCallId, $type, $message ?? null);
+
+        $this->assistantEngine->processApproval($this->threadId, $approvalOption);
     }
 
     public function render()

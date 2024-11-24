@@ -110,7 +110,7 @@
                 @endforeach
             @endif
             @if ($pendingAssistantItem)
-                <li class="max-w-lg flex gap-x-2 sm:gap-x-4 mb-4">
+                <li class="flex px-4 mb-12 ">
                     <div class="inline-block rounded-full {{$disableAssistantIcon ? 'hidden' : ''}}">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5 mt-2 text-gray-500 dark:text-gray-400">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
@@ -119,17 +119,27 @@
 
                     <div>
                         <div class="mb-2 mt-1">
+                            <div class="font-bold">{{$assistantName}}</div>
                             @php
                                 $title = $lastRunStatus;
+                                $requiresActions = [];
 
                                 foreach ($pendingAssistantItem['actions'] as $pendingAction) {
                                     if ($pendingAction['status'] === 'pending') {
                                         $title = "Calling: " . $pendingAction['content'];
                                     }
+
+                                    if ($pendingAction['status'] === \AssistantEngine\SDK\Models\Conversation\ConversationItemAction::STATUS_REQUIRES_CONFIRMATION) {
+                                        $requiresActions[] = $pendingAction;
+                                    }
                                 }
                             @endphp
 
                             <livewire:assistant-engine::collapse-box key="conversation-pending-assistant-item" animated="true" :title="$title" :items="$pendingAssistantItem['actions']" />
+
+                            @foreach($requiresActions as $requiresAction)
+                                <livewire:assistant-engine::confirmation-component key="conversation-pending-confirmation-component"  :action="$requiresAction" />
+                            @endforeach
                         </div>
 
                         @foreach($pendingAssistantItem['messages'] as $pendingAssistantMessage)

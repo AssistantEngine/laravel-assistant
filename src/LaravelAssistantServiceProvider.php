@@ -4,6 +4,7 @@ namespace AssistantEngine\Laravel;
 
 use AssistantEngine\Laravel\Components\ChatComponent;
 use AssistantEngine\Laravel\Components\CollapseBox;
+use AssistantEngine\Laravel\Components\ConfirmationComponent;
 use AssistantEngine\Laravel\Components\VoiceRecorder;
 use AssistantEngine\SDK\AssistantEngine;
 use Illuminate\Foundation\Application;
@@ -52,6 +53,7 @@ class LaravelAssistantServiceProvider extends PackageServiceProvider
             });
         }
 
+        Livewire::component('assistant-engine::confirmation-component', ConfirmationComponent::class);
         Livewire::component('assistant-engine::voice-recorder', VoiceRecorder::class);
         Livewire::component('assistant-engine::collapse-box', CollapseBox::class);
         Livewire::component('assistant-engine::chat-component', ChatComponent::class);
