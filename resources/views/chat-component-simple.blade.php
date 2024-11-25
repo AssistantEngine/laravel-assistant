@@ -137,8 +137,10 @@
 
                             <livewire:assistant-engine::collapse-box key="conversation-pending-assistant-item" animated="true" :title="$title" :items="$pendingAssistantItem['actions']" />
 
-                            @foreach($requiresActions as $requiresAction)
-                                <livewire:assistant-engine::confirmation-component key="conversation-pending-confirmation-component"  :action="$requiresAction" />
+                            @foreach($requiresActions as $i => $requiresAction)
+                                <livewire:assistant-engine::confirmation-component key="conversation-pending-confirmation-component-{{$requiresAction['id']}}" :action="$requiresAction" />
+
+                                <hr class="my-4"/>
                             @endforeach
                         </div>
 
